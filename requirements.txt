@@ -1,0 +1,8 @@
+django-redis
+django==2.2.4
+djangorestframework
+#mysqlclient
+six
+django-user-agents
+celery
+hashids
