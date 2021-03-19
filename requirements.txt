@@ -1,5 +1,5 @@
 django-redis
-django==2.2.4
+django==2.2.18
 djangorestframework
 #mysqlclient
 six
