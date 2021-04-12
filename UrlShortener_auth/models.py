@@ -116,7 +116,8 @@ class User(AbstractUser):
         visits_by_firefox_query = total_visits_query & Q(visitor_browser__startswith='Firefox')
 
         UrlVisits = apps.get_model('UrlShortener_urls.UrlVisits')
-
+        
+        # ToDo: Use F expression in order to optimize query
         return {
             'total_visits': UrlVisits.objects.filter(total_visits_query).count(),
             'visits_by_pc': UrlVisits.objects.filter(visits_by_pc_query).count(),
@@ -140,7 +141,8 @@ class User(AbstractUser):
         visits_by_firefox_query = total_visits_query & Q(visitor_browser__startswith='Firefox')
 
         UrlVisits = apps.get_model('UrlShortener_urls.UrlVisits')
-
+        
+        # ToDo: Use F expression in order to optimize query
         return {
             'total_unique_visitors': UrlVisits.objects.filter(total_visits_query).values("visitor_ip").distinct().count(),
             'visitors_by_pc': UrlVisits.objects.filter(visits_by_pc_query).values("visitor_ip").distinct().count(),
