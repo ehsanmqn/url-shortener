@@ -14,27 +14,35 @@ from UrlShortener_urls.serializers import GetUrlsSerializer, CreateUrlsSerialize
     AuthenticatedUserUrlSerializer, GetUrlVisitsSerializer, UrlVisitsSerializer, GetUrlAnalyticsSerializer
 from UrlShortener_urls.tasks import create_url_visit_task
 
-class Urls(APIView):
-    permission_classes = (IsGetOrIsAuthenticated, IsNotSuspended)
+class UrlView(APIView):
+    # permission_classes = (IsGetOrIsAuthenticated, IsNotSuspended)
+    permission_classes = (IsGetOrIsAuthenticated)
+    serializer_class = CreateUrlsSerializer
 
+    #
+    # Create short URL
+    #
     def post(self, request):
-
-        request_data = request.data
-
-        serializer = CreateUrlsSerializer(data=request_data, context={"request": request})
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
+        return self.on_valid_post_data(serializer.validated_data, request.user)
 
+    def on_valid_post_data(self, data, user):
         url = data.get('url')
-        user = request.user
 
         with transaction.atomic():
             url = user.create_short_url(url=url)
 
-        # url_serializer = AuthenticatedUserUrlSerializer(url, context={"request": request})
+        return Response({
+            'url': settings.BASE_URL + settings.SHORT_URL_PREFIX + url.shorten_url,
+            },
+            status=status.HTTP_201_CREATED
+        )
 
-        return Response(settings.BASE_URL + settings.SHORT_URL_PREFIX + url.shorten_url, status=status.HTTP_201_CREATED)
 
+    #
+    # Get created urls
+    #
     def get(self, request):
         if request.user.is_authenticated:
             return self.get_urls_for_authenticated_user(request)
@@ -58,13 +66,12 @@ class Urls(APIView):
 
         return Response(urls_serializer_data, status=status.HTTP_200_OK)
 
-
 def get_url_id_for_url_uuid(url_uuid):
     Url = apps.get_model('UrlShortener_urls.Url')
     url = Url.objects.values('id').get(uuid=url_uuid)
     return url['id']
 
-class UrlVisits(APIView):
+class UrlVisitView(APIView):
     permission_classes = (IsAuthenticated, IsNotSuspended)
 
     def get(self, request):
@@ -87,7 +94,7 @@ class UrlVisits(APIView):
         return Response(url_visits_serializer.data, status=status.HTTP_200_OK)
 
 
-class UrlVisitAnalytics(APIView):
+class UrlVisitAnalyticsView(APIView):
     permission_classes = (IsAuthenticated, IsNotSuspended)
 
     def post(self, request):
@@ -109,7 +116,7 @@ class UrlVisitAnalytics(APIView):
         return Response(url_visits, status=status.HTTP_200_OK)
 
 
-class UrlVisitorAnalytics(APIView):
+class UrlVisitorsAnalyticsView(APIView):
     permission_classes = (IsAuthenticated, IsNotSuspended)
 
     def post(self, request):
@@ -132,7 +139,7 @@ class UrlVisitorAnalytics(APIView):
 
 
 def RedirectToLongURL(request, short_url):
-    url = Url.get_url_object_for_with_shorten_id(short_url)
+    url = Url.get_url_object_for_url_with_shorten_id(short_url)
 
     create_url_visit_task.delay(visitor_ip=request.META['REMOTE_ADDR'],
                                 visitor_name=request.META['USERNAME'],
