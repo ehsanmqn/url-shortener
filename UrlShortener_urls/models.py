@@ -37,13 +37,16 @@ class Url(models.Model):
     @classmethod
     def create_url(cls, creator, url=None, shorten_url=None , title=None):
 
-        # ToDo: Add custom url support
         new_url = Url.objects.create(url=url, creator=creator)
 
-        new_url.shorten_url = str(hashids.encrypt(new_url.pk));
+        new_url.shorten_url = str(hashids.encrypt(new_url.pk))
 
         if title:
             new_url.title = title
+
+        # # ToDo: Check duplicate conditions for shorten_url
+        if shorten_url:
+            new_url.shorten_url = shorten_url
 
         new_url.save()
 
@@ -55,6 +58,7 @@ class Url(models.Model):
                                   visitor_ip=visitor_ip,
                                   visitor_browser=visitor_browser,
                                   url=self)
+
 
 class Visit(models.Model):
     url = models.ForeignKey(Url, on_delete=models.CASCADE, related_name='visits')
@@ -73,6 +77,7 @@ class Visit(models.Model):
         return cls.objects.create(url=url, visitor_device=visitor_device,
                                     visitor_ip=visitor_ip, visitor_name=visitor_name,
                                     visitor_browser=visitor_browser)
+
 
 class Analytics(models.Model):
     url = models.ForeignKey(Url, on_delete=models.CASCADE, related_name='analytics')
