@@ -41,9 +41,10 @@ class UrlVisitsSerializer(serializers.ModelSerializer):
             'visitor_browser'
         )
 
-class CreateUrlsSerializer(serializers.Serializer):
+class CreateShortUrlSerializer(serializers.Serializer):
     url = serializers.CharField(max_length=settings.URL_MAX_LENGTH, required=True, allow_blank=False)
     shorten_url = serializers.CharField(max_length=settings.SHORTEN_MAX_LENTH, required=False, allow_blank=True)
+
 
 class AuthenticatedUserUrlSerializer(serializers.ModelSerializer):
     class Meta:

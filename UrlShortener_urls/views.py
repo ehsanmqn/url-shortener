@@ -10,18 +10,14 @@ from django.conf import settings
 
 from UrlShortener_urls.models import Url
 from UrlShortener_urls.permisions import IsGetOrIsAuthenticated, IsNotSuspended
-from UrlShortener_urls.serializers import GetUrlsSerializer, CreateUrlsSerializer, \
+from UrlShortener_urls.serializers import GetUrlsSerializer, CreateShortUrlSerializer, \
     AuthenticatedUserUrlSerializer, GetUrlVisitsSerializer, UrlVisitsSerializer, GetUrlAnalyticsSerializer
 from UrlShortener_urls.tasks import create_url_visit_task
 
 class UrlView(APIView):
-    # permission_classes = (IsGetOrIsAuthenticated, IsNotSuspended)
-    permission_classes = (IsGetOrIsAuthenticated)
-    serializer_class = CreateUrlsSerializer
+    permission_classes = (IsAuthenticated)
+    serializer_class = CreateShortUrlSerializer
 
-    #
-    # Create short URL
-    #
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -39,17 +35,7 @@ class UrlView(APIView):
             status=status.HTTP_201_CREATED
         )
 
-
-    #
-    # Get created urls
-    #
     def get(self, request):
-        if request.user.is_authenticated:
-            return self.get_urls_for_authenticated_user(request)
-        else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-    def get_urls_for_authenticated_user(self, request):
         query_params = request.query_params.dict()
 
         serializer = GetUrlsSerializer(data=query_params)
