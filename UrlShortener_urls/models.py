@@ -1,10 +1,11 @@
 import uuid
-from django.db import models
-from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone
-from rest_framework.exceptions import ValidationError
-from django.db.models import Q, F, Count
 from hashids import Hashids
+
+from django.db import models
+from django.utils import timezone
+from django.db.models import Q, F, Count
+from django.shortcuts import get_object_or_404
+from rest_framework.exceptions import ValidationError
 
 from django.conf import settings
 
@@ -18,26 +19,19 @@ class Url(models.Model):
     shorten_url = models.CharField(default='', max_length=settings.SHORTEN_MAX_LENTH, editable=False, unique=True)
     created = models.DateTimeField(editable=False, db_index=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='urls')
-    title = models.CharField(
-        _('title'),
-        default='',
-        blank=True,
-        null=False,
-        max_length=100,
-    )
+    title = models.CharField(default='', blank=True, null=False, max_length=100)
 
     class Meta:
         index_together = [
             ('creator', 'uuid'),
         ]
 
-        verbose_name = _('url')
-        verbose_name_plural = _('urls')
+        verbose_name = ('url')
+        verbose_name_plural = ('urls')
 
     @classmethod
-    def get_source_url_for_url_with_shorten_id(cls, shorten_id):
-        url = cls.objects.values('url').get(shorten_url=shorten_id)
-        return url['url']
+    def get_source_url_with_shorten_url(cls, shorten_url):
+        return get_object_or_404(cls, shorten_url=shorten_url)
 
     @classmethod
     def get_url_object_for_url_with_shorten_id(cls, shorten_id):
@@ -91,7 +85,7 @@ class Url(models.Model):
     def _check_can_be_updated(self):
         if False:
             raise ValidationError(
-                _('Cannot update url.')
+                ('Cannot update url.')
             )
 
 class UrlVisits(models.Model):
@@ -103,8 +97,8 @@ class UrlVisits(models.Model):
     visitor_browser = models.CharField(default='', max_length=30)  # 1: PC, 2: Mobile
 
     class Meta:
-        verbose_name = _('visit')
-        verbose_name_plural = _('visits')
+        verbose_name = ('visit')
+        verbose_name_plural = ('visits')
 
     @classmethod
     def create_visit(cls, visitor_name, visitor_ip, visitor_device, visitor_browser, url):

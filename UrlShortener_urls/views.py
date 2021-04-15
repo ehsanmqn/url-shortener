@@ -1,12 +1,13 @@
 from django.db import transaction
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
 from django.http import HttpResponse
 from django.apps import apps
 from django.conf import settings
 
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from UrlShortener_urls.models import Url
 from UrlShortener_urls.permisions import IsGetOrIsAuthenticated, IsNotSuspended
@@ -15,6 +16,7 @@ from UrlShortener_urls.serializers import GetShortUrlSerializer, CreateShortUrlS
 from UrlShortener_urls.tasks import create_url_visit_task
 
 class UrlView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
     permission_classes = (IsAuthenticated)
     serializer_class = CreateShortUrlSerializer
 
@@ -58,7 +60,7 @@ def get_url_id_for_url_uuid(url_uuid):
     return url['id']
 
 class UrlVisitView(APIView):
-    permission_classes = (IsAuthenticated, IsNotSuspended)
+    permission_classes = (IsAuthenticated)
 
     def get(self, request):
         query_params = request.query_params.dict()
@@ -124,16 +126,14 @@ class UrlVisitorsAnalyticsView(APIView):
         return Response(url_visits, status=status.HTTP_200_OK)
 
 
-def RedirectToLongURL(request, short_url):
-    url = Url.get_url_object_for_url_with_shorten_id(short_url)
-
+def RedirectToLongURL(request, shorten_url):
     create_url_visit_task.delay(visitor_ip=request.META['REMOTE_ADDR'],
                                 visitor_name=request.META['USERNAME'],
                                 is_pc=request.user_agent.is_pc,
                                 is_mobile=(request.user_agent.is_mobile | request.user_agent.is_tablet | request.user_agent.is_touch_capable),
                                 browser=request.user_agent.browser.family,
-                                url_id=url.pk)
+                                shorten_url=shorten_url)
 
     response = HttpResponse("", status=status.HTTP_302_FOUND)
-    response['Location'] = url.url
+    response['Location'] = Url.get_source_url_with_shorten_url(shorten_url=shorten_url)
     return response
