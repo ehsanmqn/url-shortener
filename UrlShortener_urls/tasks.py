@@ -18,3 +18,7 @@ def create_url_visit_task(visitor_ip, visitor_name, shorten_url, is_pc, is_mobil
               visitor_name=visitor_name)
 
     return
+
+@shared_task
+def prepare_analytics():
+    pass
