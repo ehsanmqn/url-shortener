@@ -5,7 +5,7 @@ from UrlShortener_urls.models import Url, UrlVisits
 from UrlShortener_urls.validators import url_uuid_exists
 
 
-class GetUrlsSerializer(serializers.Serializer):
+class GetShortUrlSerializer(serializers.Serializer):
     count = serializers.IntegerField(
         required=False,
         max_value=20

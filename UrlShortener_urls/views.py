@@ -10,7 +10,7 @@ from django.conf import settings
 
 from UrlShortener_urls.models import Url
 from UrlShortener_urls.permisions import IsGetOrIsAuthenticated, IsNotSuspended
-from UrlShortener_urls.serializers import GetUrlsSerializer, CreateShortUrlSerializer, \
+from UrlShortener_urls.serializers import GetShortUrlSerializer, CreateShortUrlSerializer, \
     AuthenticatedUserUrlSerializer, GetUrlVisitsSerializer, UrlVisitsSerializer, GetUrlAnalyticsSerializer
 from UrlShortener_urls.tasks import create_url_visit_task
 
@@ -38,7 +38,7 @@ class UrlView(APIView):
     def get(self, request):
         query_params = request.query_params.dict()
 
-        serializer = GetUrlsSerializer(data=query_params)
+        serializer = GetShortUrlSerializer(data=query_params)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         count = data.get('count', 10)
