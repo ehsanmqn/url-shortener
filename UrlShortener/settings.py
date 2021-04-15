@@ -55,6 +55,14 @@ MIDDLEWARE = [
     'django_user_agents.middleware.UserAgentMiddleware',
 ]
 
+# CELERY STUFF
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Tehran'
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -69,8 +77,6 @@ CACHES = {
 ROOT_URLCONF = 'UrlShortener.urls'
 
 AUTH_USER_MODEL = 'UrlShortener_auth.User'
-
-CELERY_BROKER_URL = 'amqp://localhost'
 
 TEMPLATES = [
     {

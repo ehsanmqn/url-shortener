@@ -1,10 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
-from django.conf.urls import url
-
 
 from UrlShortener_auth.views import Register, Login
-from UrlShortener_urls.views import Urls, RedirectToLongURL, UrlVisits, UrlVisitAnalytics, UrlVisitorAnalytics
+from UrlShortener_urls.views import UrlView, RedirectToLongURL, UrlVisitView, UrlVisitAnalyticsView, UrlVisitorsAnalyticsView
 
 admin.site.site_header = "UrlShortener Url Shortener Administration Site"
 admin.site.site_title = "Portal"
@@ -16,23 +14,19 @@ auth_patterns = [
 ]
 
 analytics_patterns = [
-    path('visitor/', UrlVisitorAnalytics.as_view(), name='url-visitor-analytics'),
-    path('visit', UrlVisitAnalytics.as_view(), name='url-visit-analytics')
+    path('visitor/', UrlVisitorsAnalyticsView.as_view(), name='url-visitor-analytics'),
+    path('visit', UrlVisitAnalyticsView.as_view(), name='url-visit-analytics')
 ]
 
 url_patterns = [
-    path('', Urls.as_view(), name='create-url'),
-    path('visit/', UrlVisits.as_view(), name='url-visits'),
+    path('', UrlView.as_view(), name='create-url'),
+    path('visit/', UrlVisitView.as_view(), name='url-visits'),
     path('analytics/', include(analytics_patterns))
 ]
 
 api_patterns = [
     path('auth/', include(auth_patterns)),
     path('url/', include(url_patterns)),
-]
-
-redirect_pattern = [
-    path(r'^(?P<id>[a-zA-Z0-9])$', Urls.as_view()),
 ]
 
 urlpatterns = [

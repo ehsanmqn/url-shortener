@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator, ASCIIUsernameValidator
-from django.utils import six, timezone, translation
+from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 from django.apps import apps
 from rest_framework.authtoken.models import Token
@@ -50,10 +50,7 @@ class User(AbstractUser):
 
     @classmethod
     def create_user(cls, username, email=None, password=None, name=None, phone=None):
-
-        new_user = cls.objects.create_user(username, email=email, password=password, name=name, phone=phone)
-
-        return new_user
+        return cls.objects.create_user(username, email=email, password=password, name=name, phone=phone)
 
     @classmethod
     def is_email_taken(cls, email):

@@ -1,9 +1,7 @@
 import uuid
-from datetime import timedelta
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-from django.apps import apps
 from rest_framework.exceptions import ValidationError
 from django.db.models import Q, F, Count
 from hashids import Hashids
@@ -33,19 +31,23 @@ class Url(models.Model):
             ('creator', 'uuid'),
         ]
 
+        verbose_name = _('url')
+        verbose_name_plural = _('urls')
+
     @classmethod
     def get_source_url_for_url_with_shorten_id(cls, shorten_id):
         url = cls.objects.values('url').get(shorten_url=shorten_id)
         return url['url']
 
     @classmethod
-    def get_url_object_for_with_shorten_id(cls, shorten_id):
+    def get_url_object_for_url_with_shorten_id(cls, shorten_id):
         url = cls.objects.get(shorten_url=shorten_id)
         return url
 
     @classmethod
     def create_url(cls, creator, url=None, shorten_url=None , title=None, created=created):
 
+        # ToDo: Add custom url support
         new_url = Url.objects.create(url=url, creator=creator, created=created)
 
         new_url.shorten_url = str(hashids.encrypt(new_url.pk));
@@ -60,6 +62,7 @@ class Url(models.Model):
     def update(self, url=None, title=None):
         self._check_can_be_updated(url=url)
         if title:
+            # ToDo: Check for duplication
             self.title = title
         if url:
             self.url = url
@@ -99,8 +102,9 @@ class UrlVisits(models.Model):
     visitor_device = models.IntegerField(default=1)     # 1: PC, 2: Mobile
     visitor_browser = models.CharField(default='', max_length=30)  # 1: PC, 2: Mobile
 
-    # class Meta:
-        # unique_together = ('visitor_name', 'visitor_ip',)
+    class Meta:
+        verbose_name = _('visit')
+        verbose_name_plural = _('visits')
 
     @classmethod
     def create_visit(cls, visitor_name, visitor_ip, visitor_device, visitor_browser, url):

@@ -45,6 +45,7 @@ class Login(APIView):
     """
     The API for login
     """
+    parser_classes = (MultiPartParser, FormParser,)
     serializer_class = LoginSerializer
 
     def post(self, request):
@@ -58,6 +59,10 @@ class Login(APIView):
         user = authenticate(username=username, password=password)
         if user is not None:
             token, created = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key}, status=status.HTTP_200_OK)
+            return Response(
+                {
+                    'token': token.key
+                },
+                status=status.HTTP_200_OK)
         else:
             raise AuthenticationFailed()
