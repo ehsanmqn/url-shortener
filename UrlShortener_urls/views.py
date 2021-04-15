@@ -14,7 +14,7 @@ from UrlShortener_urls.tasks import create_url_visit_task
 
 class UrlView(APIView):
     parser_classes = (MultiPartParser, FormParser)
-    permission_classes = (IsAuthenticated)
+    permission_classes = (IsAuthenticated,)
     serializer_class = CreateShortUrlSerializer
 
     def post(self, request):
@@ -52,6 +52,7 @@ class UrlView(APIView):
         return Response(urls_serializer_data, status=status.HTTP_200_OK)
 
 def RedirectToLongURL(request, shorten_url):
+
     create_url_visit_task.delay(visitor_ip=request.META['REMOTE_ADDR'],
                                 visitor_name=request.META['USERNAME'],
                                 is_pc=request.user_agent.is_pc,

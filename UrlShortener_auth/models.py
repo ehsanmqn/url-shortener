@@ -68,7 +68,7 @@ class User(AbstractUser):
     def create_short_url(self, url=None, shorten_url=None, created=None):
 
         UrlModel = apps.get_model('UrlShortener_urls.Url')
-        url = UrlModel.create_url(url=url, shorten_url=shorten_url, creator=self, created=created)
+        url = UrlModel.create_url(url=url, shorten_url=shorten_url, creator=self)
 
         return url
 

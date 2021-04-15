@@ -2,7 +2,6 @@ import uuid
 from hashids import Hashids
 
 from django.db import models
-from django.shortcuts import get_object_or_404
 
 from UrlShortener_auth.models import User
 from UrlShortener import settings
@@ -27,7 +26,11 @@ class Url(models.Model):
 
     @classmethod
     def get_source_url_with_shorten_url(cls, shorten_url):
-        return get_object_or_404(cls, shorten_url=shorten_url)
+        try:
+            url = cls.objects.get(shorten_url=shorten_url)
+            return url.url
+        except:
+            return None
 
     @classmethod
     def get_url_object_for_url_with_shorten_id(cls, shorten_id):
@@ -80,7 +83,8 @@ class Visit(models.Model):
 
 
 class Analytics(models.Model):
-    url = models.ForeignKey(Url, on_delete=models.CASCADE, related_name='analytics')
+    # url = models.ForeignKey(Url, on_delete=models.CASCADE, related_name='analytics')
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     total_visit = models.PositiveIntegerField(default=0)
     desktop_visit = models.PositiveIntegerField(default=0)
     mobile_visit = models.PositiveIntegerField(default=0)
@@ -88,8 +92,7 @@ class Analytics(models.Model):
     chrome_visit = models.PositiveIntegerField(default=0)
     firefox_visit = models.PositiveIntegerField(default=0)
     other_explorers_visit = models.PositiveIntegerField(default=0)
-    start_time = models.TimeField()
-    end_time = models.TimeField(auto_now_add=True)
+    created_at = models.TimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = ('analytics')

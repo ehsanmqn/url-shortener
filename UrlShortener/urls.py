@@ -17,7 +17,7 @@ analytics_patterns = [
 ]
 
 url_patterns = [
-    path('', UrlView.as_view(), name='create-url'),
+    path('', UrlView.as_view(), name='url-view'),
 ]
 
 version1_patterns = [
@@ -35,5 +35,5 @@ urlpatterns = [
 
     path('api/', include(api_patterns)),
 
-    re_path(r'^r/(?P<short_url>\w+)/$', RedirectToLongURL, name='redirec-to-source-url')
+    re_path(r'^r/(?P<shorten_url>\w+)/$', RedirectToLongURL, name='redirect-to-source-url')
 ]

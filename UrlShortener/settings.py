@@ -64,9 +64,9 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Tehran'
 CELERY_BEAT_SCHEDULE = {
-    'prepare_analytics': {
-        'task': 'UrlShortener_urls.tasks.prepare_analytics',
-        'schedule': crontab(minute=0, hour=0),
+    'prepare_last_day_analytics': {
+        'task': 'UrlShortener_urls.tasks.prepare_last_day_analytics',
+        'schedule': crontab(minute=1, hour=0),
     },
 }
 
