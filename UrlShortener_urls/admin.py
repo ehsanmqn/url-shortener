@@ -41,12 +41,17 @@ class AnalyticsAdmin(admin.ModelAdmin):
     search_fields = ('uuid',)
 
     list_display = (
-        'uuid',
+        'id',
         'total_visit',
         'desktop_visit',
         'mobile_visit',
         'chrome_visit',
-        'firefox_visit'
+        'firefox_visit',
+        'unique_visitor',
+        'unique_desktop_visitor',
+        'unique_mobile_visitor',
+        'unique_chrome_visitor',
+        'unique_firefox_visitor'
     )
 
     def has_add_permission(self, request, obj=None):

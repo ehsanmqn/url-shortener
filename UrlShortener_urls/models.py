@@ -84,7 +84,7 @@ class Visit(models.Model):
 
 class Analytics(models.Model):
     # url = models.ForeignKey(Url, on_delete=models.CASCADE, related_name='analytics')
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     total_visit = models.PositiveIntegerField(default=0)
     desktop_visit = models.PositiveIntegerField(default=0)
     mobile_visit = models.PositiveIntegerField(default=0)
@@ -92,6 +92,15 @@ class Analytics(models.Model):
     chrome_visit = models.PositiveIntegerField(default=0)
     firefox_visit = models.PositiveIntegerField(default=0)
     other_explorers_visit = models.PositiveIntegerField(default=0)
+
+    unique_visitor = models.PositiveIntegerField(default=0)
+    unique_desktop_visitor = models.PositiveIntegerField(default=0)
+    unique_mobile_visitor = models.PositiveIntegerField(default=0)
+    unique_other_devices_visitor = models.PositiveIntegerField(default=0)
+    unique_chrome_visitor = models.PositiveIntegerField(default=0)
+    unique_firefox_visitor = models.PositiveIntegerField(default=0)
+    unique_other_explorers_visitor = models.PositiveIntegerField(default=0)
+
     created_at = models.TimeField(auto_now_add=True)
 
     class Meta:

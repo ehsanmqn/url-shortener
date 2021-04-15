@@ -66,7 +66,7 @@ CELERY_TIMEZONE = 'Asia/Tehran'
 CELERY_BEAT_SCHEDULE = {
     'prepare_last_day_analytics': {
         'task': 'UrlShortener_urls.tasks.prepare_last_day_analytics',
-        'schedule': crontab(minute=1, hour=0),
+        'schedule': crontab(minute=14, hour=0),
     },
 }
 
@@ -154,7 +154,7 @@ REST_FRAMEWORK = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
