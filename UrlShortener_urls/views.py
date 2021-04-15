@@ -1,6 +1,5 @@
 from django.db import transaction
 from django.http import HttpResponse
-from django.apps import apps
 from django.conf import settings
 
 from rest_framework import status
@@ -10,8 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 
 from UrlShortener_urls.models import Url
-from UrlShortener_urls.serializers import GetShortUrlSerializer, CreateShortUrlSerializer, \
-    AuthenticatedUserUrlSerializer, GetUrlVisitsSerializer, UrlVisitsSerializer, GetUrlAnalyticsSerializer
+from UrlShortener_urls.serializers import GetShortUrlSerializer, CreateShortUrlSerializer, AuthenticatedUserUrlSerializer
 from UrlShortener_urls.tasks import create_url_visit_task
 
 class UrlView(APIView):
@@ -52,81 +50,6 @@ class UrlView(APIView):
         urls_serializer_data = AuthenticatedUserUrlSerializer(urls, many=True, context={"request": request}).data
 
         return Response(urls_serializer_data, status=status.HTTP_200_OK)
-
-def get_url_id_for_url_uuid(url_uuid):
-    Url = apps.get_model('UrlShortener_urls.Url')
-    url = Url.objects.values('id').get(uuid=url_uuid)
-    return url['id']
-
-class UrlVisitView(APIView):
-    parser_classes = (MultiPartParser, FormParser)
-    permission_classes = (IsAuthenticated)
-
-    def get(self, request):
-        query_params = request.query_params.dict()
-
-        serializer = GetUrlVisitsSerializer(data=query_params)
-        serializer.is_valid(raise_exception=True)
-
-        data = serializer.validated_data
-        url_uuid = data.get('url_uuid')
-        count = data.get('count', 10)
-
-        user = request.user
-        url_id = get_url_id_for_url_uuid(url_uuid)
-
-        url_visits = user.get_visits_for_url_with_id(url_id=url_id).order_by('-created')[:count]
-
-        url_visits_serializer = UrlVisitsSerializer(url_visits, many=True, context={"request": request})
-
-        return Response(url_visits_serializer.data, status=status.HTTP_200_OK)
-
-
-class UrlVisitAnalyticsView(APIView):
-    parser_classes = (MultiPartParser, FormParser)
-    permission_classes = (IsAuthenticated)
-
-    def post(self, request):
-        request_data = request.data
-
-        serializer = GetUrlAnalyticsSerializer(data=request_data)
-        serializer.is_valid(raise_exception=True)
-
-        data = serializer.validated_data
-        url_uuid = data.get('url_uuid')
-        start_time=data.get('start_time')
-        end_time=data.get('end_time')
-
-        user = request.user
-        url_id = get_url_id_for_url_uuid(url_uuid)
-
-        url_visits = user.get_visit_analytics_for_url(url_id=url_id, start_time=start_time, end_time=end_time)
-
-        return Response(url_visits, status=status.HTTP_200_OK)
-
-
-class UrlVisitorsAnalyticsView(APIView):
-    parser_classes = (MultiPartParser, FormParser)
-    permission_classes = (IsAuthenticated)
-
-    def post(self, request):
-        request_data = request.data
-
-        serializer = GetUrlAnalyticsSerializer(data=request_data)
-        serializer.is_valid(raise_exception=True)
-
-        data = serializer.validated_data
-        url_uuid = data.get('url_uuid')
-        start_time = data.get('from')
-        end_time = data.get('to')
-
-        user = request.user
-        url_id = get_url_id_for_url_uuid(url_uuid)
-
-        url_visits = user.get_visitor_analytics_for_url(url_id=url_id, start_time=start_time, end_time=end_time)
-
-        return Response(url_visits, status=status.HTTP_200_OK)
-
 
 def RedirectToLongURL(request, shorten_url):
     create_url_visit_task.delay(visitor_ip=request.META['REMOTE_ADDR'],

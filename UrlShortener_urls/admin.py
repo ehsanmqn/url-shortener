@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from UrlShortener_urls.models import Url, UrlVisits
+from UrlShortener_urls.models import Url, Visit
 
 
 class UrlAdmin(admin.ModelAdmin):
@@ -11,7 +11,7 @@ class UrlAdmin(admin.ModelAdmin):
         'uuid',
         'shorten_url',
         'creator',
-        'created'
+        'created_at'
     )
 
     def has_add_permission(self, request, obj=None):
@@ -29,7 +29,7 @@ class UrlVisitAdmin(admin.ModelAdmin):
         'visitor_ip',
         'visitor_device',
         'visitor_browser',
-        'created'
+        'created_at'
     )
 
     def has_add_permission(self, request, obj=None):
@@ -39,4 +39,4 @@ class UrlVisitAdmin(admin.ModelAdmin):
         return True
 
 admin.site.register(Url, UrlAdmin)
-admin.site.register(UrlVisits, UrlVisitAdmin)
+admin.site.register(Visit, UrlVisitAdmin)

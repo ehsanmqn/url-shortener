@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.conf import settings
 
-from UrlShortener_urls.models import Url, UrlVisits
+from UrlShortener_urls.models import Url, Visit
 from UrlShortener_urls.validators import url_uuid_exists
 
 
@@ -33,7 +33,7 @@ class GetUrlAnalyticsSerializer(serializers.Serializer):
 
 class UrlVisitsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UrlVisits
+        model = Visit
         fields = (
             'created',
             'visitor_ip',

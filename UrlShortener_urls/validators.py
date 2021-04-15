@@ -1,7 +1,7 @@
 from rest_framework.exceptions import ValidationError, NotFound
 from django.utils.translation import ugettext_lazy as _
 
-from UrlShortener_urls.models import Url, UrlVisits
+from UrlShortener_urls.models import Url, Visit
 
 SORT_CHOICES = ['ASC', 'DESC']
 
