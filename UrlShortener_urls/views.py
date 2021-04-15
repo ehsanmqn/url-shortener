@@ -10,7 +10,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 
 from UrlShortener_urls.models import Url
-from UrlShortener_urls.permisions import IsGetOrIsAuthenticated, IsNotSuspended
 from UrlShortener_urls.serializers import GetShortUrlSerializer, CreateShortUrlSerializer, \
     AuthenticatedUserUrlSerializer, GetUrlVisitsSerializer, UrlVisitsSerializer, GetUrlAnalyticsSerializer
 from UrlShortener_urls.tasks import create_url_visit_task
@@ -60,6 +59,7 @@ def get_url_id_for_url_uuid(url_uuid):
     return url['id']
 
 class UrlVisitView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
     permission_classes = (IsAuthenticated)
 
     def get(self, request):
@@ -83,7 +83,8 @@ class UrlVisitView(APIView):
 
 
 class UrlVisitAnalyticsView(APIView):
-    permission_classes = (IsAuthenticated, IsNotSuspended)
+    parser_classes = (MultiPartParser, FormParser)
+    permission_classes = (IsAuthenticated)
 
     def post(self, request):
         request_data = request.data
@@ -105,7 +106,8 @@ class UrlVisitAnalyticsView(APIView):
 
 
 class UrlVisitorsAnalyticsView(APIView):
-    permission_classes = (IsAuthenticated, IsNotSuspended)
+    parser_classes = (MultiPartParser, FormParser)
+    permission_classes = (IsAuthenticated)
 
     def post(self, request):
         request_data = request.data
