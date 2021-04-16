@@ -1,5 +1,6 @@
 # The UrlShortener project
-This is a simple Django project implemented to work as an efficient and high speed URL Shortner. This project also demonestrate Async programming with Django using Celery and RabbitMQ. Furthermore, in order to optimize speed this project uses Redis as cache backend. Some tiny optimizations also performed in Views.
+This is a simple Django project implemented to work as an efficient and high speed URL Shortner. 
+Some of Async tasks provided using Celery. Furthermore, in order to optimize speed, this project uses Redis as cache backend. Some tiny optimizations also performed in Views.
 
 ## Table of contents
 
@@ -8,13 +9,15 @@ This is a simple Django project implemented to work as an efficient and high spe
 
 ## Requirements
 
-* [RabbitMQ](https://www.rabbitmq.com/)
+* [Python3](https://www.python.org/)
+* [Django](https://www.djangoproject.com/)
+* [Django Rest Framework](https://www.django-rest-framework.org/)
 * [Reddis](https://redis.io/)
 * [Celery](http://www.celeryproject.org/)
 
 ## Project overview
 
-The project is a [Django](https://www.djangoproject.com/start/) application. 
+The project is a [Django](https://www.djangoproject.com/start/) application. It serves a URL Shortner using DRF. 
 
 ## Getting started
 
@@ -35,7 +38,7 @@ pip install -r requirements.txt
 #### Run celery worker
 
 ```bash
-celery -A UrlShortener worker -l info
+celery -A UrlShortener worker -B -l info
 ```
 
 #### Run project
