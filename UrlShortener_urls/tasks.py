@@ -26,11 +26,18 @@ def create_url_visit_task(visitor_ip, visitor_name, shorten_url, is_pc, is_mobil
 
 @shared_task
 def prepare_last_day_analytics():
-    start_date = datetime.strftime(datetime.now() - timedelta(days=1), '%Y-%m-%d')
-    end_date = datetime.strftime(datetime.now(), '%Y-%m-%d')
-
     yesterday = timezone.make_aware(datetime.today() - timedelta(days=1), timezone.get_current_timezone())
-    dateQ = Q(visits__created_at__gt=yesterday)
+
+    start_from = timezone.make_aware(datetime(yesterday.year,
+                                              yesterday.month,
+                                              yesterday.day),
+                                     timezone.get_current_timezone())
+    end_to = timezone.make_aware(datetime(yesterday.year,
+                                          yesterday.month,
+                                          yesterday.day, 23, 59, 59),
+                                 timezone.get_current_timezone())
+
+    dateQ = Q(visits__created_at__range=[start_from, end_to])
 
     total_visit = Count('visits', filter=dateQ)
     desktop_visit = Count('visits', filter=Q(visits__visitor_device='pc') & dateQ)
