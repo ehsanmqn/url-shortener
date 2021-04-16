@@ -2,7 +2,6 @@ from datetime import timedelta, date, datetime
 
 from django.db import transaction
 from django.http import HttpResponse
-from django.conf import settings
 from django.apps import apps
 from django.db.models import Sum, Count, Q
 from django.utils import timezone

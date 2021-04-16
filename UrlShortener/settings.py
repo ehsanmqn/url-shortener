@@ -66,7 +66,7 @@ CELERY_TIMEZONE = 'Asia/Tehran'
 CELERY_BEAT_SCHEDULE = {
     'prepare_last_day_analytics': {
         'task': 'UrlShortener_urls.tasks.prepare_last_day_analytics',
-        'schedule': crontab(minute=20, hour=11),
+        'schedule': crontab(minute=1, hour=0),
     },
 }
 
