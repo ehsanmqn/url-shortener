@@ -15,6 +15,7 @@ class RegisterSerializer(serializers.Serializer):
     email = serializers.EmailField(validators=[email_not_taken_validator])
     phone = serializers.CharField(max_length=11, allow_blank=False)
 
+
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=USERNAME_MAX_LENGTH,
                                      allow_blank=False,

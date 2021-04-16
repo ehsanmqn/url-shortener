@@ -19,6 +19,10 @@ from UrlShortener_urls.serializers import AnalyticsModelSerializer, CreateShortU
 from UrlShortener_urls.tasks import create_url_visit_task
 
 class UrlView(APIView):
+    """
+    The Url List or Create API view
+    """
+
     parser_classes = (MultiPartParser, FormParser)
     permission_classes = (IsAuthenticated,)
     serializer_class = CreateShortUrlSerializer
@@ -63,7 +67,10 @@ class UrlView(APIView):
         return Response(serialized_data, status=status.HTTP_200_OK)
 
 
-class RetrieveUrlLastDaysVisitAnalytics(generics.RetrieveAPIView):
+class RetrieveUrlVisitAnalytics(generics.RetrieveAPIView):
+    """
+    The Analytics API view
+    """
     permission_classes = (IsAuthenticated,)
     parser_classes = (FormParser, MultiPartParser,)
     serializer_class = AnalyticsModelSerializer
@@ -167,7 +174,9 @@ class RetrieveUrlLastDaysVisitAnalytics(generics.RetrieveAPIView):
 
 
 def RedirectToLongURL(request, hash):
-
+    """
+    The redirect to source url function
+    """
     create_url_visit_task.delay(visitor_ip=request.META['REMOTE_ADDR'],
                                 visitor_name=request.META['USERNAME'],
                                 is_pc=request.user_agent.is_pc,

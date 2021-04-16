@@ -7,8 +7,6 @@ from django.db import IntegrityError
 from UrlShortener_auth.models import User
 from UrlShortener import settings
 
-hashids = Hashids()
-
 class Url(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     url = models.URLField(default='', editable=True, unique=False)
@@ -45,7 +43,7 @@ class Url(models.Model):
         if hash:
             new_url.hash = hash
         else:
-            new_url.hash = str(hashids.encrypt(new_url.pk))
+            new_url.hash = str(Hashids().encrypt(new_url.pk))
 
         new_url.shorten_url = settings.BASE_URL + settings.SHORT_URL_PREFIX + new_url.hash
 

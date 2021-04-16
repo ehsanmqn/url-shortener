@@ -28,9 +28,3 @@ def name_characters_validator(name):
         raise ValidationError(
             _('Names can\'t contain < or >.'),
         )
-
-def user_username_exists(username):
-    if not User.user_with_username_exists(username=username):
-        raise NotFound(
-            _('No user with the provided username exists.'),
-        )
