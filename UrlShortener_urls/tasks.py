@@ -50,23 +50,6 @@ def prepare_last_day_analytics():
     unique_other_explorers_visitor = Count('visits__visitor_ip', distinct=True,
                                            filter=Q(visits__visitor_browser='other') & dateQ)
 
-    # queryset = Url.objects \
-    #     .annotate(total_visit=total_visit) \
-    #     .annotate(desktop_visit=desktop_visit) \
-    #     .annotate(mobile_visit=mobile_visit) \
-    #     .annotate(other_devices_visit=other_devices_visit) \
-    #     .annotate(chrome_visit=chrome_visit) \
-    #     .annotate(firefox_visit=firefox_visit) \
-    #     .annotate(other_explorers_visit=other_explorers_visit) \
-    #     .values('uuid',
-    #             'total_visit',
-    #             'desktop_visit',
-    #             'mobile_visit',
-    #             'other_devices_visit',
-    #             'chrome_visit',
-    #             'firefox_visit',
-    #             'other_explorers_visit')
-
     queryset = Url.objects \
         .annotate(total_visit=total_visit) \
         .annotate(desktop_visit=desktop_visit) \

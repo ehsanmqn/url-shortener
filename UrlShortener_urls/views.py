@@ -1,6 +1,7 @@
 from django.db import transaction
 from django.http import HttpResponse
 from django.conf import settings
+from django.apps import apps
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -9,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
 
 from UrlShortener_urls.models import Url
-from UrlShortener_urls.serializers import GetShortUrlSerializer, CreateShortUrlSerializer, AuthenticatedUserUrlSerializer
+from UrlShortener_urls.serializers import GetShortUrlSerializer, CreateShortUrlSerializer, UrlModelSerializer
 from UrlShortener_urls.tasks import create_url_visit_task
 
 class UrlView(APIView):
@@ -35,21 +36,16 @@ class UrlView(APIView):
         )
 
     def get(self, request):
-        query_params = request.query_params.dict()
-
-        serializer = GetShortUrlSerializer(data=query_params)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        count = data.get('count', 10)
-
         user = request.user
 
-        urls = user.get_timeline_urls(count=count)
-        urls = urls.order_by('-id')
+        UrlModel = apps.get_model('UrlShortener_urls.Url')
+        queryset = UrlModel.objects.filter(creator=user)[:10]
 
-        urls_serializer_data = AuthenticatedUserUrlSerializer(urls, many=True, context={"request": request}).data
+        serialized_data = UrlModelSerializer(queryset,
+                                                  many=True,
+                                                  context={"request": request}).data
 
-        return Response(urls_serializer_data, status=status.HTTP_200_OK)
+        return Response(serialized_data, status=status.HTTP_200_OK)
 
 def RedirectToLongURL(request, shorten_url):
 

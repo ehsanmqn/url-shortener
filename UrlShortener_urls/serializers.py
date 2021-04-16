@@ -46,7 +46,7 @@ class CreateShortUrlSerializer(serializers.Serializer):
     shorten_url = serializers.CharField(max_length=settings.SHORTEN_MAX_LENTH, required=False, allow_blank=True)
 
 
-class AuthenticatedUserUrlSerializer(serializers.ModelSerializer):
+class UrlModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Url
         fields = (
@@ -54,6 +54,5 @@ class AuthenticatedUserUrlSerializer(serializers.ModelSerializer):
             'uuid',
             'url',
             'shorten_url',
-            'created',
-            'creator'
+            'created_at'
         )

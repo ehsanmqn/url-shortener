@@ -3,12 +3,10 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator, ASCIIUsernameValidator
 from django.utils import six
 from django.apps import apps
-from rest_framework.authtoken.models import Token
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
-from django.db.models import Q
-
+from rest_framework.authtoken.models import Token
 
 from UrlShortener.settings import USERNAME_MAX_LENGTH
 
@@ -71,15 +69,6 @@ class User(AbstractUser):
         url = UrlModel.create_url(url=url, shorten_url=shorten_url, creator=self)
 
         return url
-
-    def get_timeline_urls(self, count=None):
-
-        urls_query = Q(creator_id=self.id)
-
-        Url = apps.get_model('UrlShortener_urls.Url')
-        urls = Url.objects.filter(urls_query)
-
-        return urls
 
     def _reset_auth_token(self):
         self.auth_token.delete()
