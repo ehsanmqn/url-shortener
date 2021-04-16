@@ -1,5 +1,5 @@
 # The UrlShortener project
-This is a simple Django project implemented to work as an efficient and high speed URL Shortner. 
+This is a simple Django project implemented to work as an efficient and high speed URL Shortener. 
 Some of Async tasks provided using Celery. Furthermore, in order to optimize speed, this project uses Redis as cache backend. Some tiny optimizations also performed in Views.
 
 ## Table of contents
@@ -17,7 +17,7 @@ Some of Async tasks provided using Celery. Furthermore, in order to optimize spe
 
 ## Project overview
 
-The project is a [Django](https://www.djangoproject.com/start/) application. It serves a URL Shortner using DRF. 
+The project is a [Django](https://www.djangoproject.com/start/) application. It serves a URL Shortener using DRF. 
 
 ## Getting started
 
