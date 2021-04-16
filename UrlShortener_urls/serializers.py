@@ -43,6 +43,7 @@ class UrlModelSerializer(serializers.ModelSerializer):
             'id',
             'uuid',
             'url',
+            'shorten_url',
             'hash',
             'created_at'
         )

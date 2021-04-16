@@ -11,6 +11,7 @@ hashids = Hashids()
 class Url(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     url = models.URLField(default='', editable=True, unique=False)
+    shorten_url = models.URLField(default='', editable=True)
     hash = models.CharField(default='', max_length=settings.SHORTEN_MAX_LENTH, editable=False, unique=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='urls')
     title = models.CharField(default='', blank=True, null=False, max_length=100)
@@ -37,15 +38,16 @@ class Url(models.Model):
 
         new_url = Url.objects.create(url=url, creator=creator)
 
-        new_url.hash = str(hashids.encrypt(new_url.pk))
-
         if title:
             new_url.title = title
 
         # # ToDo: Check duplicate conditions for hash
         if hash:
             new_url.hash = hash
+        else:
+            new_url.hash = str(hashids.encrypt(new_url.pk))
 
+        new_url.shorten_url = settings.BASE_URL + settings.SHORT_URL_PREFIX + new_url.hash
         new_url.save()
 
         return new_url

@@ -35,7 +35,7 @@ class UrlView(APIView):
             url = user.create_short_url(url=url)
 
         return Response({
-            'url': settings.BASE_URL + settings.SHORT_URL_PREFIX + url.hash,
+            'url': url.shorten_url,
             },
             status=status.HTTP_201_CREATED
         )
