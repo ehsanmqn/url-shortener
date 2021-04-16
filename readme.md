@@ -49,6 +49,6 @@ celery -A UrlShortener worker -B -l info
 
 After running the project, it will be accessed through port 8000
 
-Project API document is accessible from [here](https://documenter.getpostman.com/view/5584679/SzS5wTGQ?version=latest)
+Project API document is accessible from [here](https://documenter.getpostman.com/view/5584679/TzJrCf6J)
 #### Happy coding!
 
