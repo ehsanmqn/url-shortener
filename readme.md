@@ -1,5 +1,5 @@
 # The UrlShortener project
-This is a simple Django project implemented to work as an efficient and high speed URL Shortner. 
+This is a simple Django project implemented to work as an efficient and high speed URL Shortener. 
 Some of Async tasks provided using Celery. Furthermore, in order to optimize speed, this project uses Redis as cache backend. Some tiny optimizations also performed in Views.
 
 ## Table of contents
@@ -17,7 +17,7 @@ Some of Async tasks provided using Celery. Furthermore, in order to optimize spe
 
 ## Project overview
 
-The project is a [Django](https://www.djangoproject.com/start/) application. It serves a URL Shortner using DRF. 
+The project is a [Django](https://www.djangoproject.com/start/) application. It serves a URL Shortener using DRF. 
 
 ## Getting started
 
@@ -30,8 +30,8 @@ git clone https://gitlab.com/ehsanmqn/urlshortener
 #### Prepare the project
 ```bash
 cd url-shortener
-virtualenv -p pyhton3 env
-source env/bin/activate
+virtualenv -p pyhton3 venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -49,6 +49,6 @@ celery -A UrlShortener worker -B -l info
 
 After running the project, it will be accessed through port 8000
 
-Project API document is accessible from [here](https://documenter.getpostman.com/view/5584679/SzS5wTGQ?version=latest)
+Project API document is accessible from [here](https://documenter.getpostman.com/view/5584679/TzJrCf6J)
 #### Happy coding!
 
