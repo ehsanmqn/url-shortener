@@ -11,7 +11,7 @@ hashids = Hashids()
 class Url(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
     url = models.URLField(default='', editable=True, unique=False)
-    shorten_url = models.CharField(default='', max_length=settings.SHORTEN_MAX_LENTH, editable=False, unique=True)
+    hash = models.CharField(default='', max_length=settings.SHORTEN_MAX_LENTH, editable=False, unique=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='urls')
     title = models.CharField(default='', blank=True, null=False, max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -25,31 +25,26 @@ class Url(models.Model):
         verbose_name_plural = ('urls')
 
     @classmethod
-    def get_source_url_with_shorten_url(cls, shorten_url):
+    def get_source_url_with_hash(cls, hash):
         try:
-            url = cls.objects.get(shorten_url=shorten_url)
+            url = cls.objects.get(hash=hash)
             return url.url
         except:
             return None
 
     @classmethod
-    def get_url_object_for_url_with_shorten_id(cls, shorten_id):
-        url = cls.objects.get(shorten_url=shorten_id)
-        return url
-
-    @classmethod
-    def create_url(cls, creator, url=None, shorten_url=None , title=None):
+    def create_url(cls, creator, url=None, hash=None , title=None):
 
         new_url = Url.objects.create(url=url, creator=creator)
 
-        new_url.shorten_url = str(hashids.encrypt(new_url.pk))
+        new_url.hash = str(hashids.encrypt(new_url.pk))
 
         if title:
             new_url.title = title
 
-        # # ToDo: Check duplicate conditions for shorten_url
-        if shorten_url:
-            new_url.shorten_url = shorten_url
+        # # ToDo: Check duplicate conditions for hash
+        if hash:
+            new_url.hash = hash
 
         new_url.save()
 

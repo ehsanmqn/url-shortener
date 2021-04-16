@@ -63,10 +63,10 @@ class User(AbstractUser):
         except User.DoesNotExist:
             return False
 
-    def create_short_url(self, url=None, shorten_url=None, created=None):
+    def create_short_url(self, url=None, hash=None, created=None):
 
         UrlModel = apps.get_model('UrlShortener_urls.Url')
-        url = UrlModel.create_url(url=url, shorten_url=shorten_url, creator=self)
+        url = UrlModel.create_url(url=url, hash=hash, creator=self)
 
         return url
 

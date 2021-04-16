@@ -4,12 +4,13 @@ from UrlShortener_urls.models import Url, Visit, Analytics
 
 
 class UrlAdmin(admin.ModelAdmin):
-    search_fields = ('url', 'shorten_url')
+    search_fields = ('url', 'hash')
 
     list_display = (
+        'id',
         'url',
         'uuid',
-        'shorten_url',
+        'hash',
         'creator',
         'created_at'
     )

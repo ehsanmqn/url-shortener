@@ -39,5 +39,5 @@ urlpatterns = [
 
     path('api/', include(api_patterns)),
 
-    re_path(r'^r/(?P<shorten_url>\w+)/$', RedirectToLongURL, name='redirect-to-source-url')
+    re_path(r'^r/(?P<hash>\w+)/$', RedirectToLongURL, name='redirect-to-source-url')
 ]

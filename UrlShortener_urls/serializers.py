@@ -33,7 +33,7 @@ class GetUrlAnalyticsSerializer(serializers.Serializer):
 
 class CreateShortUrlSerializer(serializers.Serializer):
     url = serializers.CharField(max_length=settings.URL_MAX_LENGTH, required=True, allow_blank=False)
-    shorten_url = serializers.CharField(max_length=settings.SHORTEN_MAX_LENTH, required=False, allow_blank=True)
+    hash = serializers.CharField(max_length=settings.SHORTEN_MAX_LENTH, required=False, allow_blank=True)
 
 
 class UrlModelSerializer(serializers.ModelSerializer):
@@ -43,7 +43,7 @@ class UrlModelSerializer(serializers.ModelSerializer):
             'id',
             'uuid',
             'url',
-            'shorten_url',
+            'hash',
             'created_at'
         )
 

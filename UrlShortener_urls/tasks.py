@@ -7,7 +7,7 @@ from django.utils import timezone
 from UrlShortener_urls.models import Url, Analytics
 
 @shared_task
-def create_url_visit_task(visitor_ip, visitor_name, shorten_url, is_pc, is_mobile, browser):
+def create_url_visit_task(visitor_ip, visitor_name, hash, is_pc, is_mobile, browser):
     if (is_pc):
         visitor_device = 'pc'
     elif (is_mobile):
@@ -15,7 +15,7 @@ def create_url_visit_task(visitor_ip, visitor_name, shorten_url, is_pc, is_mobil
     else:
         visitor_device = 'other'
 
-    url = Url.objects.get(shorten_url=shorten_url)
+    url = Url.objects.get(hash=hash)
 
     url.visit(visitor_ip=visitor_ip,
               visitor_device=visitor_device,

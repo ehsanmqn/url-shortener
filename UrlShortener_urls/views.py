@@ -35,7 +35,7 @@ class UrlView(APIView):
             url = user.create_short_url(url=url)
 
         return Response({
-            'url': settings.BASE_URL + settings.SHORT_URL_PREFIX + url.shorten_url,
+            'url': settings.BASE_URL + settings.SHORT_URL_PREFIX + url.hash,
             },
             status=status.HTTP_201_CREATED
         )
@@ -155,15 +155,16 @@ class RetrieveUrlLastDaysVisitAnalytics(generics.RetrieveAPIView):
             "analytics": self.get_queryset()
         }, status=status.HTTP_200_OK)
 
-def RedirectToLongURL(request, shorten_url):
+
+def RedirectToLongURL(request, hash):
 
     create_url_visit_task.delay(visitor_ip=request.META['REMOTE_ADDR'],
                                 visitor_name=request.META['USERNAME'],
                                 is_pc=request.user_agent.is_pc,
                                 is_mobile=(request.user_agent.is_mobile | request.user_agent.is_tablet | request.user_agent.is_touch_capable),
                                 browser=request.user_agent.browser.family,
-                                shorten_url=shorten_url)
+                                hash=hash)
 
     response = HttpResponse("", status=status.HTTP_302_FOUND)
-    response['Location'] = Url.get_source_url_with_shorten_url(shorten_url=shorten_url)
+    response['Location'] = Url.get_source_url_with_hash(hash=hash)
     return response
