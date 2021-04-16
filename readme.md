@@ -30,8 +30,8 @@ git clone https://gitlab.com/ehsanmqn/urlshortener
 #### Prepare the project
 ```bash
 cd url-shortener
-virtualenv -p pyhton3 env
-source env/bin/activate
+virtualenv -p pyhton3 venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
