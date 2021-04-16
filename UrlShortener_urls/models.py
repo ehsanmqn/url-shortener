@@ -101,7 +101,7 @@ class Analytics(models.Model):
     unique_firefox_visitor = models.PositiveIntegerField(default=0)
     unique_other_explorers_visitor = models.PositiveIntegerField(default=0)
 
-    created_at = models.TimeField(auto_now_add=True)
+    created_at = models.DateField(auto_now_add=True)
 
     class Meta:
         verbose_name = ('analytics')
