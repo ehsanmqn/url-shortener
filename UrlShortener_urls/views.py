@@ -30,15 +30,25 @@ class UrlView(APIView):
 
     def on_valid_post_data(self, data, user):
         url = data.get('url')
+        hash = data.get('hash')
 
         with transaction.atomic():
-            url = user.create_short_url(url=url)
+            UrlModel = apps.get_model('UrlShortener_urls.Url')
 
-        return Response({
-            'url': url.shorten_url,
-            },
-            status=status.HTTP_201_CREATED
-        )
+            try:
+                url = UrlModel.create_url(url=url, hash=hash, creator=user)
+
+                return Response({
+                    'url': url.shorten_url,
+                },
+                    status=status.HTTP_201_CREATED
+                )
+            except ValueError as e:
+                return Response({
+                    'error': str(e),
+                },
+                    status=status.HTTP_201_CREATED
+                )
 
     def get(self, request):
         user = request.user

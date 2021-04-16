@@ -61,14 +61,7 @@ class User(AbstractUser):
             cls.objects.get(phone=phone)
             return True
         except User.DoesNotExist:
-            return False
-
-    def create_short_url(self, url=None, hash=None, created=None):
-
-        UrlModel = apps.get_model('UrlShortener_urls.Url')
-        url = UrlModel.create_url(url=url, hash=hash, creator=self)
-
-        return url
+            return Falsee
 
     def _reset_auth_token(self):
         self.auth_token.delete()

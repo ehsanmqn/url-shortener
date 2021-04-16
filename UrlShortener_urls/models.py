@@ -2,6 +2,7 @@ import uuid
 from hashids import Hashids
 
 from django.db import models
+from django.db import IntegrityError
 
 from UrlShortener_auth.models import User
 from UrlShortener import settings
@@ -41,16 +42,18 @@ class Url(models.Model):
         if title:
             new_url.title = title
 
-        # # ToDo: Check duplicate conditions for hash
         if hash:
             new_url.hash = hash
         else:
             new_url.hash = str(hashids.encrypt(new_url.pk))
 
         new_url.shorten_url = settings.BASE_URL + settings.SHORT_URL_PREFIX + new_url.hash
-        new_url.save()
 
-        return new_url
+        try:
+            new_url.save()
+            return new_url
+        except IntegrityError as e:
+            raise ValueError(str(e))
 
     def visit(self, visitor_name, visitor_ip, visitor_device, visitor_browser):
         return Visit.create_visit(visitor_name=visitor_name,
