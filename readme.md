@@ -1,6 +1,6 @@
 # A simple but fast Url Shortener
-This is a simple Django project implemented to work as an efficient and high speed URL Shortener. 
-Async tasks handled using Celery. Furthermore, in order to optimize the response time, this project uses Redis as a cache backend. Some tiny optimizations also performed in Views.
+This is a simple Django project implemented to work as an efficient and high-speed URL Shortener. 
+Async tasks are handled using Celery. Furthermore, in order to optimize the response time, this project uses Redis as a cache backend. Some tiny optimizations are also performed in Views.
 
 ## Table of contents
 
@@ -15,7 +15,7 @@ Async tasks handled using Celery. Furthermore, in order to optimize the response
 * [Reddis](https://redis.io/)
 * [Celery](http://www.celeryproject.org/)
 
-## Project overview
+## Project Overview
 
 The project is a [Django](https://www.djangoproject.com/start/) application. It serves a URL Shortener using DRF. 
 
@@ -24,7 +24,7 @@ The project is a [Django](https://www.djangoproject.com/start/) application. It 
 #### Clone the repository
 
 ```bash
-git clone https://gitlab.com/ehsanmqn/urlshortener
+git clone [https://gitlab.com/ehsanmqn/urlshortener](https://github.com/ehsanmqn/url-shortener)
 ```
 
 #### Prepare the project
@@ -49,6 +49,5 @@ celery -A UrlShortener worker -B -l info
 
 After running the project, it will be accessed through port 8000
 
-Project API document is accessible from [here](https://documenter.getpostman.com/view/5584679/TzJrCf6J)
 #### Happy coding!
 
